@@ -6,34 +6,22 @@ import { FormBuilder } from './modules/builder/FormBuilder.tsx';
 import { ResponsesDashboard } from './modules/responses/ResponsesDashboard.tsx';
 import { PublicFormPage } from './modules/public/PublicFormPage.tsx';
 import { EmbedFormPage } from './modules/embed/EmbedFormPage.tsx';
-import { IntegrationPlayground } from './modules/playground/IntegrationPlayground.tsx';
-import { DocsModal } from './modules/docs/DocsModal.tsx';
 import { DatabaseStatusBadge } from './components/DatabaseStatusBadge.tsx';
 import {
   Layers,
-  FileText,
   LogOut,
   User,
-  Shield,
-  BookOpen,
-  Sparkles,
-  ExternalLink,
-  ChevronRight,
-  Database,
-  Lock,
-  Key,
-  Cpu,
+  Plus,
 } from 'lucide-react';
 
 function AppContent() {
   const { user, loading, logout } = useAuth();
   const [authModalOpen, setAuthModalOpen] = useState(false);
   const [authMode, setAuthMode] = useState<'login' | 'signup'>('login');
-  const [docsModalOpen, setDocsModalOpen] = useState(false);
 
   // Hash-based router
   const [route, setRoute] = useState<{
-    page: 'dashboard' | 'builder' | 'responses' | 'public-form' | 'embed-form' | 'playground';
+    page: 'dashboard' | 'builder' | 'responses' | 'public-form' | 'embed-form';
     param?: string;
   }>(() => {
     const hash = window.location.hash;
@@ -49,9 +37,6 @@ function AppContent() {
     if (hash.startsWith('#responses/')) {
       return { page: 'responses', param: hash.replace('#responses/', '') };
     }
-    if (hash === '#playground') {
-      return { page: 'playground' };
-    }
     return { page: 'dashboard' };
   });
 
@@ -66,8 +51,6 @@ function AppContent() {
         setRoute({ page: 'builder', param: hash.replace('#builder/', '') });
       } else if (hash.startsWith('#responses/')) {
         setRoute({ page: 'responses', param: hash.replace('#responses/', '') });
-      } else if (hash === '#playground') {
-        setRoute({ page: 'playground' });
       } else {
         setRoute({ page: 'dashboard' });
       }
@@ -117,58 +100,18 @@ function AppContent() {
                 <Layers className="w-5 h-5" />
               </div>
               <div>
-                <div className="flex items-center gap-2">
-                  <span className="text-base font-extrabold text-slate-900 tracking-tight">
-                    FormForge
-                  </span>
-                  <span className="hidden sm:inline-block px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">
-                    KoboToolbox Architecture
-                  </span>
-                </div>
-                <div className="text-[11px] text-slate-400">
-                  Reusable Form Builder & Collection Engine
-                </div>
+                <span className="text-base font-extrabold text-slate-900 tracking-tight block">
+                  FormForge
+                </span>
+                <span className="text-[11px] text-slate-400 block -mt-0.5">
+                  Form Builder & Data Collection
+                </span>
               </div>
             </button>
           </div>
 
           {/* Navigation Links & User Bar */}
           <div className="flex items-center gap-3">
-            <div className="flex items-center bg-slate-100 p-1 rounded-xl border border-slate-200 text-xs font-semibold">
-              <button
-                type="button"
-                onClick={() => navigateTo('dashboard')}
-                className={`px-3 py-1.5 rounded-lg transition ${
-                  route.page !== 'playground'
-                    ? 'bg-white text-slate-900 shadow-sm'
-                    : 'text-slate-600 hover:text-slate-900'
-                }`}
-              >
-                Hosted Dashboard
-              </button>
-              <button
-                type="button"
-                onClick={() => navigateTo('playground')}
-                className={`px-3 py-1.5 rounded-lg transition flex items-center gap-1.5 ${
-                  route.page === 'playground'
-                    ? 'bg-white text-emerald-800 shadow-sm'
-                    : 'text-slate-600 hover:text-slate-900'
-                }`}
-              >
-                <Cpu className="w-3.5 h-3.5 text-emerald-600" />
-                <span>Framework Lab (Adapters)</span>
-              </button>
-            </div>
-
-            <button
-              type="button"
-              onClick={() => setDocsModalOpen(true)}
-              className="hidden md:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition"
-            >
-              <BookOpen className="w-3.5 h-3.5" />
-              <span>Architecture & RLS</span>
-            </button>
-
             <DatabaseStatusBadge />
 
             {loading ? (
@@ -181,21 +124,6 @@ function AppContent() {
                     {user.email}
                   </span>
                 </div>
-                <button
-                  type="button"
-                  onClick={() => {
-                    const token = localStorage.getItem('formforge_auth_token');
-                    if (token) {
-                      navigator.clipboard.writeText(token);
-                      alert('JWT Token copied to clipboard!');
-                    }
-                  }}
-                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-emerald-200 bg-emerald-50 text-emerald-800 hover:bg-emerald-100 text-xs font-semibold transition"
-                  title="Copy your active JWT token to clipboard"
-                >
-                  <Key className="w-3.5 h-3.5" />
-                  <span className="hidden sm:inline">Copy JWT</span>
-                </button>
                 <button
                   type="button"
                   onClick={logout}
@@ -224,7 +152,7 @@ function AppContent() {
                     setAuthMode('signup');
                     setAuthModalOpen(true);
                   }}
-                  className="px-4 py-1.5 text-xs font-semibold bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl shadow-sm transition"
+                  className="px-3.5 py-1.5 text-xs font-semibold bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl shadow-xs transition"
                 >
                   Create Account
                 </button>
@@ -236,36 +164,25 @@ function AppContent() {
 
       {/* Main Body */}
       <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6">
-        {/* If user is not logged in, show auth gate banner */}
+        {/* If user is not logged in, show clean welcome banner */}
         {!user && !loading && (
-          <div className="bg-gradient-to-r from-slate-900 via-slate-800 to-emerald-950 text-white rounded-3xl p-6 sm:p-10 mb-8 shadow-xl relative overflow-hidden">
-            <div className="relative z-10 max-w-2xl space-y-4">
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 text-xs font-medium">
-                <Shield className="w-3.5 h-3.5" />
-                <span>Phase 1 Core Platform Ready</span>
-              </div>
-              <h1 className="text-2xl sm:text-4xl font-extrabold tracking-tight">
-                Enterprise Form Building with PostgreSQL & Supabase RLS
+          <div className="bg-gradient-to-r from-slate-900 via-slate-800 to-emerald-950 text-white rounded-3xl p-6 sm:p-8 mb-8 shadow-xl relative overflow-hidden">
+            <div className="relative z-10 max-w-2xl space-y-3">
+              <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight">
+                Design Forms & Collect Data Seamlessly
               </h1>
               <p className="text-slate-300 text-xs sm:text-sm leading-relaxed">
-                Build versioned survey schemas with 8 question types, deploy public forms with server-side validation, manage respondents, and isolate user data with Row Level Security.
+                Create surveys and questionnaires with live validation, publish public respondent links, and export your responses anytime.
               </p>
-              <div className="pt-2 flex flex-wrap gap-3">
+              <div className="pt-2">
                 <button
                   onClick={() => {
-                    setAuthMode('signup');
+                    setAuthMode('login');
                     setAuthModalOpen(true);
                   }}
-                  className="px-5 py-2.5 bg-emerald-500 hover:bg-emerald-600 text-white text-xs font-bold rounded-xl shadow-md transition flex items-center gap-2"
+                  className="px-5 py-2.5 bg-emerald-500 hover:bg-emerald-600 text-white text-xs font-bold rounded-xl shadow-md transition inline-flex items-center gap-2"
                 >
-                  <span>Sign Up / Quick Test Login</span>
-                  <ChevronRight className="w-4 h-4" />
-                </button>
-                <button
-                  onClick={() => setDocsModalOpen(true)}
-                  className="px-4 py-2.5 bg-white/10 hover:bg-white/20 text-white text-xs font-semibold rounded-xl border border-white/20 transition"
-                >
-                  View Architecture & Schema
+                  <span>Sign In / Demo Login</span>
                 </button>
               </div>
             </div>
@@ -273,9 +190,7 @@ function AppContent() {
         )}
 
         {/* View Router */}
-        {route.page === 'playground' ? (
-          <IntegrationPlayground />
-        ) : route.page === 'builder' && route.param ? (
+        {route.page === 'builder' && route.param ? (
           <FormBuilder
             formId={route.param}
             onBack={() => navigateTo('dashboard')}
@@ -297,22 +212,15 @@ function AppContent() {
       </main>
 
       {/* Footer */}
-      <footer className="bg-white border-t border-slate-200 mt-auto py-6">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-500">
+      <footer className="bg-white border-t border-slate-200 mt-auto py-5">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-slate-500">
           <div className="flex items-center gap-2">
             <span className="font-bold text-slate-700">FormForge</span>
             <span>•</span>
-            <span>Inspired by KoboToolbox & ODK open data architectures</span>
+            <span>Form Builder & Data Collection Engine</span>
           </div>
-          <div className="flex items-center gap-4">
-            <button
-              onClick={() => setDocsModalOpen(true)}
-              className="hover:text-emerald-700 transition"
-            >
-              Schema & RLS Policies
-            </button>
-            <span>•</span>
-            <span>PostgreSQL Engine Active</span>
+          <div>
+            <span>© 2026 FormForge</span>
           </div>
         </div>
       </footer>
@@ -322,12 +230,6 @@ function AppContent() {
         isOpen={authModalOpen}
         onClose={() => setAuthModalOpen(false)}
         defaultMode={authMode}
-      />
-
-      {/* Documentation Modal: JWT Verification, Supabase Integration & RLS */}
-      <DocsModal
-        isOpen={docsModalOpen}
-        onClose={() => setDocsModalOpen(false)}
       />
     </div>
   );

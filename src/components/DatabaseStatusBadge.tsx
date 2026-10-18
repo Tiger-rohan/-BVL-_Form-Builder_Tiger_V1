@@ -83,8 +83,8 @@ export const DatabaseStatusBadge: React.FC = () => {
           <span className="hidden sm:inline">
             {dbState.connected
               ? isExternal
-                ? 'PostgreSQL (Cloud)'
-                : 'DB: Local (PGlite)'
+                ? 'Cloud Database'
+                : 'Database Ready'
               : 'DB Offline'}
           </span>
         </button>

@@ -69,7 +69,7 @@ export const FormsDashboard: React.FC<FormsDashboardProps> = ({
       await api.duplicateForm(formId);
       await loadForms();
     } catch (err: any) {
-      alert('Failed to duplicate form: ' + err.message);
+      setError('Failed to duplicate form: ' + err.message);
     }
   };
 
@@ -82,18 +82,16 @@ export const FormsDashboard: React.FC<FormsDashboardProps> = ({
       }
       await loadForms();
     } catch (err: any) {
-      alert('Failed to update form status: ' + err.message);
+      setError('Failed to update form status: ' + err.message);
     }
   };
 
   const handleDelete = async (formId: string, title: string) => {
-    if (confirm(`Are you sure you want to delete "${title}" and all its recorded responses? This action is permanent.`)) {
-      try {
-        await api.deleteForm(formId);
-        setForms(forms.filter((f) => f.id !== formId));
-      } catch (err: any) {
-        alert('Failed to delete form: ' + err.message);
-      }
+    try {
+      await api.deleteForm(formId);
+      setForms(forms.filter((f) => f.id !== formId));
+    } catch (err: any) {
+      setError('Failed to delete form: ' + err.message);
     }
   };
 
@@ -292,63 +290,59 @@ export const FormsDashboard: React.FC<FormsDashboardProps> = ({
               </div>
 
               {/* Card Actions Bottom Bar */}
-              <div className="p-3 bg-slate-50/80 border-t border-slate-100 flex items-center justify-between gap-1 text-xs font-semibold">
-                <div className="flex items-center gap-1">
+              <div className="p-3 bg-slate-50/80 border-t border-slate-100 flex flex-wrap items-center justify-between gap-2 text-xs font-semibold">
+                <div className="flex items-center gap-1.5">
                   <button
                     type="button"
                     onClick={() => onOpenBuilder(form.id)}
                     className="px-3 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white transition shadow-2xs"
                   >
-                    Design & Edit
+                    Edit Form
                   </button>
                   <button
                     type="button"
                     onClick={() => onOpenResponses(form.id)}
-                    className="px-2.5 py-1.5 rounded-lg text-slate-700 hover:bg-slate-200 transition"
+                    className="px-2.5 py-1.5 rounded-lg text-slate-700 bg-white border border-slate-200 hover:bg-slate-100 transition"
                   >
-                    Responses
+                    Responses ({form.submission_count || 0})
                   </button>
                 </div>
 
-                <div className="flex items-center gap-0.5 text-slate-400">
+                <div className="flex items-center gap-1">
+                  <button
+                    type="button"
+                    onClick={() => setSelectedEmbedForm(form)}
+                    className="px-2.5 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 transition flex items-center gap-1"
+                    title="Share, Embed & Hosted Script Tag"
+                  >
+                    <Code2 className="w-3.5 h-3.5 text-emerald-600" />
+                    <span>Embed</span>
+                  </button>
+
                   {form.status === 'published' && (
                     <button
                       type="button"
                       onClick={() => onOpenPublicView(form.slug)}
-                      className="p-1.5 hover:text-emerald-700 hover:bg-emerald-50 rounded-lg transition"
+                      className="p-1.5 text-slate-400 hover:text-emerald-700 hover:bg-emerald-50 rounded-lg transition"
                       title="Open Public Survey Page"
                     >
                       <ExternalLink className="w-4 h-4" />
                     </button>
                   )}
-                  <button
-                    type="button"
-                    onClick={() => setSelectedEmbedForm(form)}
-                    className="p-1.5 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg transition"
-                    title="Share, Embed & API"
-                  >
-                    <Code2 className="w-4 h-4" />
-                  </button>
+
                   <button
                     type="button"
                     onClick={() => handleDuplicate(form.id)}
-                    className="p-1.5 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition"
+                    className="p-1.5 text-slate-400 hover:text-slate-700 hover:bg-slate-100 rounded-lg transition"
                     title="Duplicate Form"
                   >
                     <Copy className="w-4 h-4" />
                   </button>
-                  <button
-                    type="button"
-                    onClick={() => handleToggleArchive(form)}
-                    className="p-1.5 hover:text-amber-600 hover:bg-amber-50 rounded-lg transition"
-                    title={form.status === 'archived' ? 'Unarchive Form' : 'Archive Form'}
-                  >
-                    <Archive className="w-4 h-4" />
-                  </button>
+
                   <button
                     type="button"
                     onClick={() => handleDelete(form.id, form.title)}
-                    className="p-1.5 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition"
+                    className="p-1.5 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition"
                     title="Delete Form"
                   >
                     <Trash2 className="w-4 h-4" />

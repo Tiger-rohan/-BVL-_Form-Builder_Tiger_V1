@@ -1,0 +1,31 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "experimentalDecorators": true,
+    "useDefineForClassFields": false,
+    "module": "ESNext",
+    "types": ["vite/client"],
+    "lib": [
+      "ES2022",
+      "DOM",
+      "DOM.Iterable"
+    ],
+    "skipLibCheck": true,
+    "moduleResolution": "bundler",
+    "isolatedModules": true,
+    "moduleDetection": "force",
+    "allowJs": true,
+    "jsx": "react-jsx",
+    "paths": {
+      "@formforge/core": ["./packages/core/src/index.ts"],
+      "@formforge/adapters": ["./packages/adapters/src/index.ts"],
+      "@formforge/react": ["./packages/react/src/index.ts"],
+      "@formforge/builder": ["./packages/builder/src/index.ts"],
+      "@formforge/server": ["./packages/server/src/index.ts"],
+      "@formforge/web-component": ["./packages/web-component/src/index.ts"],
+      "@/*": ["./*"]
+    },
+    "allowImportingTsExtensions": true,
+    "noEmit": true
+  }
+}

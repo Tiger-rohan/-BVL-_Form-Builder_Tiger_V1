@@ -1,0 +1,11 @@
+{
+  "name": "@formforge/core",
+  "version": "1.0.0",
+  "description": "Framework-agnostic form schemas, validation engine, and storage adapter interface",
+  "main": "./src/index.ts",
+  "module": "./src/index.ts",
+  "types": "./src/index.ts",
+  "type": "module",
+  "keywords": ["form", "schema", "validation", "formforge", "adapter"],
+  "license": "MIT"
+}

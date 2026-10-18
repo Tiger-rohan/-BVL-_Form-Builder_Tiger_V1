@@ -1,0 +1,220 @@
+import React from 'react';
+import { FormFieldDefinition } from '@formforge/core';
+import { AlertCircle } from 'lucide-react';
+
+export interface FormFieldProps {
+  field: FormFieldDefinition;
+  value: any;
+  onChange: (val: any) => void;
+  error?: string;
+  disabled?: boolean;
+}
+
+export const FormField: React.FC<FormFieldProps> = ({
+  field,
+  value,
+  onChange,
+  error,
+  disabled = false,
+}) => {
+  const isRequired = !!field.validation?.required;
+
+  return (
+    <div className="space-y-1.5" id={`field-container-${field.id}`}>
+      <div className="flex items-baseline justify-between">
+        <label
+          htmlFor={field.id}
+          className="text-sm font-semibold text-slate-800 flex items-center gap-1"
+        >
+          <span>{field.label}</span>
+          {isRequired && (
+            <span className="text-rose-500 font-bold" title="Required field">
+              *
+            </span>
+          )}
+        </label>
+        {field.validation?.max && (
+          <span className="text-[11px] text-slate-400">
+            {typeof value === 'string' ? value.length : 0}/{field.validation.max}
+          </span>
+        )}
+      </div>
+
+      {field.helpText && (
+        <p className="text-xs text-slate-500 leading-relaxed">{field.helpText}</p>
+      )}
+
+      {/* Field Control by Type */}
+      <div className="mt-1">
+        {field.type === 'text' && (
+          <input
+            id={field.id}
+            type="text"
+            disabled={disabled}
+            placeholder={field.placeholder || ''}
+            value={value ?? ''}
+            onChange={(e) => onChange(e.target.value)}
+            className={`w-full px-3.5 py-2.5 text-sm rounded-xl border bg-white text-slate-900 transition focus:outline-none focus:ring-2 ${
+              error
+                ? 'border-rose-300 focus:ring-rose-400 bg-rose-50/20'
+                : 'border-slate-300 focus:ring-emerald-500 focus:border-emerald-500'
+            }`}
+          />
+        )}
+
+        {field.type === 'email' && (
+          <input
+            id={field.id}
+            type="email"
+            disabled={disabled}
+            placeholder={field.placeholder || 'name@domain.com'}
+            value={value ?? ''}
+            onChange={(e) => onChange(e.target.value)}
+            className={`w-full px-3.5 py-2.5 text-sm rounded-xl border bg-white text-slate-900 transition focus:outline-none focus:ring-2 ${
+              error
+                ? 'border-rose-300 focus:ring-rose-400 bg-rose-50/20'
+                : 'border-slate-300 focus:ring-emerald-500 focus:border-emerald-500'
+            }`}
+          />
+        )}
+
+        {field.type === 'number' && (
+          <input
+            id={field.id}
+            type="number"
+            disabled={disabled}
+            placeholder={field.placeholder || ''}
+            min={field.validation?.min}
+            max={field.validation?.max}
+            value={value ?? ''}
+            onChange={(e) =>
+              onChange(e.target.value === '' ? '' : Number(e.target.value))
+            }
+            className={`w-full px-3.5 py-2.5 text-sm rounded-xl border bg-white text-slate-900 transition focus:outline-none focus:ring-2 ${
+              error
+                ? 'border-rose-300 focus:ring-rose-400 bg-rose-50/20'
+                : 'border-slate-300 focus:ring-emerald-500 focus:border-emerald-500'
+            }`}
+          />
+        )}
+
+        {field.type === 'textarea' && (
+          <textarea
+            id={field.id}
+            rows={4}
+            disabled={disabled}
+            placeholder={field.placeholder || ''}
+            value={value ?? ''}
+            onChange={(e) => onChange(e.target.value)}
+            className={`w-full px-3.5 py-2.5 text-sm rounded-xl border bg-white text-slate-900 transition focus:outline-none focus:ring-2 ${
+              error
+                ? 'border-rose-300 focus:ring-rose-400 bg-rose-50/20'
+                : 'border-slate-300 focus:ring-emerald-500 focus:border-emerald-500'
+            }`}
+          />
+        )}
+
+        {field.type === 'select' && (
+          <select
+            id={field.id}
+            disabled={disabled}
+            value={value ?? ''}
+            onChange={(e) => onChange(e.target.value)}
+            className={`w-full px-3.5 py-2.5 text-sm rounded-xl border bg-white text-slate-900 transition focus:outline-none focus:ring-2 ${
+              error
+                ? 'border-rose-300 focus:ring-rose-400 bg-rose-50/20'
+                : 'border-slate-300 focus:ring-emerald-500 focus:border-emerald-500'
+            }`}
+          >
+            <option value="">
+              {field.placeholder || '-- Select an option --'}
+            </option>
+            {field.options?.map((opt, i) => (
+              <option key={`${opt.value}-${i}`} value={opt.value}>
+                {opt.label}
+              </option>
+            ))}
+          </select>
+        )}
+
+        {field.type === 'radio' && (
+          <div className="space-y-2 pt-1">
+            {field.options?.map((opt, idx) => (
+              <label
+                key={`${field.id}-opt-${idx}`}
+                className="flex items-center gap-3 p-2.5 rounded-xl border border-slate-200 hover:bg-slate-50 cursor-pointer transition text-sm text-slate-800"
+              >
+                <input
+                  type="radio"
+                  name={field.key}
+                  disabled={disabled}
+                  value={opt.value}
+                  checked={value === opt.value}
+                  onChange={() => onChange(opt.value)}
+                  className="w-4 h-4 text-emerald-600 focus:ring-emerald-500 border-slate-300"
+                />
+                <span>{opt.label}</span>
+              </label>
+            ))}
+          </div>
+        )}
+
+        {field.type === 'checkbox' && (
+          <div className="space-y-2 pt-1">
+            {field.options?.map((opt, idx) => {
+              const currentArray: string[] = Array.isArray(value) ? value : [];
+              const isChecked = currentArray.includes(opt.value);
+
+              const handleToggle = () => {
+                if (isChecked) {
+                  onChange(currentArray.filter((v) => v !== opt.value));
+                } else {
+                  onChange([...currentArray, opt.value]);
+                }
+              };
+
+              return (
+                <label
+                  key={`${field.id}-chk-${idx}`}
+                  className="flex items-center gap-3 p-2.5 rounded-xl border border-slate-200 hover:bg-slate-50 cursor-pointer transition text-sm text-slate-800"
+                >
+                  <input
+                    type="checkbox"
+                    disabled={disabled}
+                    checked={isChecked}
+                    onChange={handleToggle}
+                    className="w-4 h-4 text-emerald-600 focus:ring-emerald-500 border-slate-300 rounded"
+                  />
+                  <span>{opt.label}</span>
+                </label>
+              );
+            })}
+          </div>
+        )}
+
+        {field.type === 'date' && (
+          <input
+            id={field.id}
+            type="date"
+            disabled={disabled}
+            value={value ?? ''}
+            onChange={(e) => onChange(e.target.value)}
+            className={`w-full px-3.5 py-2.5 text-sm rounded-xl border bg-white text-slate-900 transition focus:outline-none focus:ring-2 ${
+              error
+                ? 'border-rose-300 focus:ring-rose-400 bg-rose-50/20'
+                : 'border-slate-300 focus:ring-emerald-500 focus:border-emerald-500'
+            }`}
+          />
+        )}
+      </div>
+
+      {/* Field Error Message */}
+      {error && (
+        <div className="flex items-center gap-1.5 text-xs text-rose-600 font-medium pt-0.5 animate-shake">
+          <AlertCircle className="w-3.5 h-3.5 shrink-0" />
+          <span>{error}</span>
+        </div>
+      )}
+    </div>
+  );
+};

@@ -1,0 +1,6 @@
+{
+  "name": "FormForge",
+  "description": "A reusable full-stack form-builder platform inspired by KoboToolbox with dynamic schemas, public respondent rendering, server validation, versioned JSON definitions, and response management.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

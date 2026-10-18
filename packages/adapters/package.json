@@ -1,0 +1,14 @@
+{
+  "name": "@formforge/adapters",
+  "version": "1.0.0",
+  "description": "Pluggable storage adapters for FormForge (Memory, REST API, Webhook, Postgres, Supabase)",
+  "main": "./src/index.ts",
+  "module": "./src/index.ts",
+  "types": "./src/index.ts",
+  "type": "module",
+  "dependencies": {
+    "@formforge/core": "^1.0.0"
+  },
+  "keywords": ["formforge", "adapters", "storage", "postgres", "rest-api"],
+  "license": "MIT"
+}

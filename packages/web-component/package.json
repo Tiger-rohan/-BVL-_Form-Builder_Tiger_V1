@@ -1,0 +1,14 @@
+{
+  "name": "@formforge/web-component",
+  "version": "1.0.0",
+  "description": "Framework-neutral Custom Element <formforge-form> for plain HTML, Angular, Vue, PHP",
+  "main": "./src/index.ts",
+  "module": "./src/index.ts",
+  "types": "./src/index.ts",
+  "type": "module",
+  "dependencies": {
+    "@formforge/core": "^1.0.0"
+  },
+  "keywords": ["formforge", "web-component", "custom-element", "forms"],
+  "license": "MIT"
+}

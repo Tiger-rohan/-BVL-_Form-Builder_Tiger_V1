@@ -1,0 +1,14 @@
+{
+  "name": "@formforge/server",
+  "version": "1.0.0",
+  "description": "Server-side submission processing and validation middleware for FormForge",
+  "main": "./src/index.ts",
+  "module": "./src/index.ts",
+  "types": "./src/index.ts",
+  "type": "module",
+  "dependencies": {
+    "@formforge/core": "^1.0.0"
+  },
+  "keywords": ["formforge", "server", "express", "validation"],
+  "license": "MIT"
+}
